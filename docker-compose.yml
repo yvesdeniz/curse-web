@@ -1,0 +1,31 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Baked into the build (NEXT_PUBLIC_* is inlined at build time).
+        NEXT_PUBLIC_INVITE_URL: ${NEXT_PUBLIC_INVITE_URL:-#}
+    image: curse-web:latest
+    container_name: curse-web
+    restart: unless-stopped
+    # No host port published — nginx reaches it as http://curse-web:3000
+    # over the shared proxy network.
+    expose:
+      - "3000"
+    environment:
+      NODE_ENV: production
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - nginx-proxy
+
+networks:
+  # Same shared external network nginx and curse-bot are on.
+  nginx-proxy:
+    name: n8n_nginx-proxy
+    external: true
