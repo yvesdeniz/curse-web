@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { site } from "@/lib/site";
@@ -27,6 +27,11 @@ export const metadata: Metadata = {
   icons: {
     icon: './icon.svg'
   }
+};
+
+// Discord (and other unfurlers) use theme-color for the embed's accent bar.
+export const viewport: Viewport = {
+  themeColor: "#8b7cf6",
 };
 
 export default function RootLayout({
