@@ -1,7 +1,18 @@
+import {
+  ShieldCheck,
+  Gavel,
+  Settings,
+  Terminal,
+  Coins,
+  Gamepad2,
+  type LucideIcon,
+} from "lucide-react";
+
 export type CommandCategory =
-  | "Verification"
   | "Moderation"
-  | "Information"
+  | "Core"
+  | "Verification"
+  | "Dev"
   | "Economy"
   | "Fun";
 
@@ -12,55 +23,56 @@ export type Command = {
   usage: string;
 };
 
-export const categories: CommandCategory[] = [
-  "Verification",
-  "Moderation",
-  "Information",
-  "Economy",
-  "Fun",
+export type CategoryMeta = {
+  name: CommandCategory;
+  icon: LucideIcon;
+  /** Marketed but not shipped yet — rendered as a "coming soon" section. */
+  comingSoon?: boolean;
+};
+
+/** Category order + icons, mirroring the bot's own `,help` output. */
+export const categoryMeta: CategoryMeta[] = [
+  { name: "Moderation", icon: Gavel },
+  { name: "Core", icon: Settings },
+  { name: "Verification", icon: ShieldCheck },
+  { name: "Dev", icon: Terminal },
+  { name: "Economy", icon: Coins, comingSoon: true },
+  { name: "Fun", icon: Gamepad2, comingSoon: true },
 ];
 
-/** Command reference. The bot prefix is "," — edit freely. */
+/** Command reference. The bot prefix is ",". */
 export const commands: Command[] = [
-  // Verification
-  {
-    name: ",setupverify setup",
-    category: "Verification",
-    description: "Create the verification panel and configure the verified role.",
-    usage: ",verify setup <role> [channel]",
-  },
-  // {
-  //   name: ",verify panel",
-  //   category: "Verification",
-  //   description: "Post or refresh the one-click verification button.",
-  //   usage: ",verify panel [channel]",
-  // },
-  // {
-  //   name: ",verify bypass",
-  //   category: "Verification",
-  //   description: "Manually mark a member as verified.",
-  //   usage: ",verify bypass <member>",
-  // },
-
-  // Moderation
+  // ---------------------------------------------------------- Moderation
   {
     name: ",ban",
     category: "Moderation",
     description: "Ban a member, optionally deleting their recent messages.",
     usage: ",ban <member> [reason] [delete_days]",
   },
-  // {
-  //   name: ",kick",
-  //   category: "Moderation",
-  //   description: "Remove a member from the server.",
-  //   usage: ",kick <member> [reason]",
-  // },
-  // {
-  //   name: ",mute",
-  //   category: "Moderation",
-  //   description: "Timeout a member for a set duration.",
-  //   usage: ",mute <member> <duration> [reason]",
-  // },
+  {
+    name: ",unban",
+    category: "Moderation",
+    description: "Lift a ban and let a user rejoin the server.",
+    usage: ",unban <user> [reason]",
+  },
+  {
+    name: ",kick",
+    category: "Moderation",
+    description: "Remove a member from the server.",
+    usage: ",kick <member> [reason]",
+  },
+  {
+    name: ",mute",
+    category: "Moderation",
+    description: "Timeout a member for a set duration.",
+    usage: ",mute <member> <duration> [reason]",
+  },
+  {
+    name: ",unmute",
+    category: "Moderation",
+    description: "Lift a member's timeout early.",
+    usage: ",unmute <member> [reason]",
+  },
   {
     name: ",warn",
     category: "Moderation",
@@ -68,81 +80,99 @@ export const commands: Command[] = [
     usage: ",warn <member> <reason>",
   },
   {
+    name: ",warnings",
+    category: "Moderation",
+    description: "Review a member's full warning history.",
+    usage: ",warnings [member]",
+  },
+  {
     name: ",purge",
     category: "Moderation",
     description: "Bulk-delete messages in the current channel.",
     usage: ",purge <amount> [member]",
   },
-  // {
-  //   name: ",lockdown",
-  //   category: "Moderation",
-  //   description: "Lock a channel so members can no longer send messages.",
-  //   usage: ",lockdown [channel] [reason]",
-  // },
+  {
+    name: ",nuke",
+    category: "Moderation",
+    description: "Clone and recreate a channel to wipe every message instantly.",
+    usage: ",nuke [channel]",
+  },
+  {
+    name: ",jail",
+    category: "Moderation",
+    description: "Lock a member into a restricted jail role until released.",
+    usage: ",jail <member> [reason]",
+  },
+  {
+    name: ",role",
+    category: "Moderation",
+    description: "Add or remove a role from a member.",
+    usage: ",role <member> <role>",
+  },
+  {
+    name: ",forcenick",
+    category: "Moderation",
+    description: "Lock a member to a fixed nickname they can't change.",
+    usage: ",forcenick <member> <nickname>",
+  },
+  {
+    name: ",unforcenick",
+    category: "Moderation",
+    description: "Release a locked nickname so the member can set their own.",
+    usage: ",unforcenick <member>",
+  },
 
-  // Information
+  // ---------------------------------------------------------------- Core
   {
     name: ",userinfo",
-    category: "Information",
+    category: "Core",
     description: "Show account details, roles, and join date for a member.",
     usage: ",userinfo [member]",
   },
   {
     name: ",serverinfo",
-    category: "Information",
+    category: "Core",
     description: "Display server stats, owner, and creation date.",
     usage: ",serverinfo",
   },
   {
     name: ",help",
-    category: "Information",
+    category: "Core",
     description: "Browse every command and how to use it.",
-    usage: ",help [command]",
+    usage: ",help [category|command]",
   },
 
-  // Economy
-  // {
-  //   name: ",balance",
-  //   category: "Economy",
-  //   description: "Check your wallet and bank balance.",
-  //   usage: ",balance [member]",
-  // },
-  // {
-  //   name: ",daily",
-  //   category: "Economy",
-  //   description: "Claim your daily coin reward.",
-  //   usage: ",daily",
-  // },
-  // {
-  //   name: ",shop",
-  //   category: "Economy",
-  //   description: "Browse and buy items from the server shop.",
-  //   usage: ",shop [page]",
-  // },
-  // {
-  //   name: ",pay",
-  //   category: "Economy",
-  //   description: "Send coins to another member.",
-  //   usage: ",pay <member> <amount>",
-  // },
+  // -------------------------------------------------------- Verification
+  {
+    name: ",setupverify",
+    category: "Verification",
+    description: "Create the verification panel and set the verified role.",
+    usage: ",setupverify <role> [channel]",
+  },
+  {
+    name: ",restore",
+    category: "Verification",
+    description: "Restore a returning member's previous roles.",
+    usage: ",restore <member>",
+  },
 
-  // // Fun
-  // {
-  //   name: ",8ball",
-  //   category: "Fun",
-  //   description: "Ask the magic 8-ball a yes/no question.",
-  //   usage: ",8ball <question>",
-  // },
-  // {
-  //   name: ",meme",
-  //   category: "Fun",
-  //   description: "Pull a fresh meme into the channel.",
-  //   usage: ",meme",
-  // },
-  // {
-  //   name: ",rps",
-  //   category: "Fun",
-  //   description: "Play rock-paper-scissors against the bot.",
-  //   usage: ",rps <choice>",
-  // },
+  // ----------------------------------------------------------------- Dev
+  {
+    name: ",cog",
+    category: "Dev",
+    description: "Load, reload, or unload a bot module at runtime.",
+    usage: ",cog <load|reload|unload> <name>",
+  },
+  {
+    name: ",eval",
+    category: "Dev",
+    description: "Evaluate code in the bot runtime (owner only).",
+    usage: ",eval <code>",
+  },
+  {
+    name: ",botinfo",
+    category: "Dev",
+    description: "Show bot uptime, version, and runtime stats.",
+    usage: ",botinfo",
+  },
 ];

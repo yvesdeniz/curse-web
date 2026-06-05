@@ -29,7 +29,6 @@ export const metadata: Metadata = {
   }
 };
 
-// Discord (and other unfurlers) use theme-color for the embed's accent bar.
 export const viewport: Viewport = {
   themeColor: "#8b7cf6",
 };

@@ -32,6 +32,14 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/changelog"
+                  className="text-muted transition-colors hover:text-foreground"
+                >
+                  Changelog
+                </Link>
+              </li>
             </ul>
           </div>
 
