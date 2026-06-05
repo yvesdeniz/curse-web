@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { Github, Twitter } from "lucide-react";
 import { team } from "@/lib/team";
 import { Container } from "@/components/Container";
@@ -40,7 +39,8 @@ export default function TeamPage() {
               {/* Avatar */}
               <div className="flex items-center gap-4">
                 {member.avatar ? (
-                  <Image
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
                     src={member.avatar}
                     alt={member.name}
                     width={56}
