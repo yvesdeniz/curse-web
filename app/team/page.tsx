@@ -116,7 +116,7 @@ export default function TeamPage() {
             We&rsquo;re always looking for passionate people. Reach out on our
             Discord server if you&rsquo;d like to contribute.
           </p>
-          <ButtonLink href="/#" variant="ghost" size="md">
+          <ButtonLink href="https://discord.gg/yf8PySefGS" variant="ghost" size="md">
             Join the Discord
           </ButtonLink>
         </div>
