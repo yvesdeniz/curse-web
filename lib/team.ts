@@ -20,6 +20,7 @@ export const team: TeamMember[] = [
       discord: "https://discord.com/users/1306505500699000856",
       github: "https://github.com/yvesdeniz",
     },
+  },
   {
     name: "paunic",
     role: "Developer",
@@ -28,6 +29,4 @@ export const team: TeamMember[] = [
       discord: "https://discord.com/users/852670185088221204"
     }
   },
-  },
-  // Add more team members here
 ];
