@@ -16,7 +16,7 @@ export function Footer() {
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-10 sm:gap-16">
+        <div className="grid grid-cols-3 gap-10 sm:gap-16">
           <div>
             <h3 className="text-xs font-medium uppercase tracking-wide text-faint">
               Product
@@ -58,6 +58,30 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="text-xs font-medium uppercase tracking-wide text-faint">
+              Community
+            </h3>
+            <ul className="mt-4 flex flex-col gap-2.5 text-sm">
+              <li>
+                <Link
+                  href="/team"
+                  className="text-muted transition-colors hover:text-foreground"
+                >
+                  Team
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/supporters"
+                  className="text-muted transition-colors hover:text-foreground"
+                >
+                  Supporters
+                </Link>
+              </li>
             </ul>
           </div>
         </div>

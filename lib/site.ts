@@ -12,6 +12,7 @@ export const site = {
     { label: "Features", href: "/#features" },
     { label: "Commands", href: "/commands" },
     { label: "Docs", href: "/docs/getting-started" },
+    { label: "Team", href: "/team" },
   ],
 } as const;
 
