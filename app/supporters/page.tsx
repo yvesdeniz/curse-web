@@ -72,7 +72,7 @@ export default function SupportersPage() {
             curse is free to use. If you&rsquo;d like to show your support and get
             your name on this page, reach out on our Discord server.
           </p>
-          <ButtonLink href={site.inviteUrl} external size="md">
+          <ButtonLink href="https://discord.gg/yf8PySefGS" external size="md">
             Add to Discord
           </ButtonLink>
         </div>
