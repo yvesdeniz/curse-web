@@ -10,8 +10,8 @@ jobs:
     steps:
       - name: Pull latest code
         run: |
-          git -C /root/docker/curse-web fetch origin master
-          git -C /root/docker/curse-web reset --hard origin/master
+          git -C /home/debian/curse/curse-web fetch origin master
+          git -C /home/debian/curse/curse-web reset --hard origin/master
 
       - name: Rebuild and restart container
-        run: docker compose -f /root/docker/curse-web/docker-compose.yml up -d --build
+        run: docker compose -f /home/debian/curse/curse-web/docker-compose.yml up -d --build
