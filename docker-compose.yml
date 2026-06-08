@@ -13,7 +13,12 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - NODE_ENV=production
+        - NODE_ENV=production
+        - DISCORD_CLIENT_ID=${DISCORD_CLIENT_ID}
+        - DISCORD_CLIENT_SECRET=${DISCORD_CLIENT_SECRET}
+        - DISCORD_BOT_TOKEN=${DISCORD_BOT_TOKEN}
+        - OAUTH_REDIRECT_URI=${OAUTH_REDIRECT_URI}
+        - MONGODB_URI=${MONGODB_URI}
     healthcheck:
       test: ["CMD", "wget", "--spider", "-q", "http://localhost:3000"]
       interval: 30s
