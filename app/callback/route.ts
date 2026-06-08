@@ -73,11 +73,13 @@ async function sendDM(userId: string): Promise<void> {
 }
 
 export async function GET(request: NextRequest) {
-  const { searchParams, origin } = request.nextUrl;
+  const { searchParams } = request.nextUrl;
   const code  = searchParams.get('code');
   const state = searchParams.get('state');
 
-  const to = (path: string) => NextResponse.redirect(new URL(path, origin));
+  const host  = request.headers.get('x-forwarded-host') ?? request.headers.get('host') ?? 'localhost:3000';
+  const proto = request.headers.get('x-forwarded-proto') ?? 'http';
+  const to = (path: string) => NextResponse.redirect(`${proto}://${host}${path}`);
 
   if (!code || !state) return to('/verified?error=Missing+OAuth+parameters.');
 
