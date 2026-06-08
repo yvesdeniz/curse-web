@@ -29,10 +29,7 @@ async function exchangeCode(code: string): Promise<TokenResponse> {
       redirect_uri:  process.env.OAUTH_REDIRECT_URI!,
     }),
   });
-  if (!res.ok) {
-    const body = await res.text();
-    throw new Error(`Discord ${res.status}: ${body}`);
-  }
+  if (!res.ok) throw new Error(`Token exchange failed: ${res.status}`);
   return res.json();
 }
 
@@ -96,8 +93,8 @@ export async function GET(request: NextRequest) {
   let tokens: TokenResponse;
   try {
     tokens = await exchangeCode(code);
-  } catch (err) {
-    return to(`/verified?error=${encodeURIComponent(String(err))}`);
+  } catch {
+    return to('/verified?error=Could+not+exchange+authorization+code.');
   }
 
   let user: DiscordUser;
