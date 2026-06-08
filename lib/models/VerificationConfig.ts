@@ -1,4 +1,4 @@
-import { model, models, Schema } from 'mongoose';
+import { model, models, Schema, type InferSchemaType, type Model } from 'mongoose';
 
 const schema = new Schema(
   {
@@ -10,4 +10,7 @@ const schema = new Schema(
   { timestamps: true },
 );
 
-export const VerificationConfig = models.VerificationConfig ?? model('VerificationConfig', schema);
+type Doc = InferSchemaType<typeof schema>;
+
+export const VerificationConfig: Model<Doc> =
+  (models.VerificationConfig as Model<Doc> | undefined) ?? model<Doc>('VerificationConfig', schema);

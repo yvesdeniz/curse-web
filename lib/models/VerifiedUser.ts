@@ -1,4 +1,4 @@
-import { model, models, Schema } from 'mongoose';
+import { model, models, Schema, type InferSchemaType, type Model } from 'mongoose';
 
 const schema = new Schema(
   {
@@ -14,4 +14,7 @@ const schema = new Schema(
 
 schema.index({ userId: 1, guildId: 1 }, { unique: true });
 
-export const VerifiedUser = models.VerifiedUser ?? model('VerifiedUser', schema);
+type Doc = InferSchemaType<typeof schema>;
+
+export const VerifiedUser: Model<Doc> =
+  (models.VerifiedUser as Model<Doc> | undefined) ?? model<Doc>('VerifiedUser', schema);
