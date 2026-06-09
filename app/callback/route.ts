@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectDB } from '@/lib/db';
-import { VerifiedUser } from '@/lib/models/VerifiedUser';
-import { VerificationConfig } from '@/lib/models/VerificationConfig';
+import { eq } from 'drizzle-orm';
+import { db } from '@/lib/db';
+import { verifiedUsers, verificationConfig } from '@/lib/schema';
 
 const API = 'https://discord.com/api/v10';
 
@@ -105,19 +105,32 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    await connectDB();
-    await VerifiedUser.findOneAndUpdate(
-      { userId: user.id, guildId },
-      {
+    await db.insert(verifiedUsers)
+      .values({
+        userId:       user.id,
+        guildId,
         accessToken:  tokens.access_token,
         refreshToken: tokens.refresh_token,
         tokenType:    tokens.token_type,
         expiresAt:    new Date(Date.now() + tokens.expires_in * 1000),
-      },
-      { upsert: true },
-    );
+      })
+      .onConflictDoUpdate({
+        target: [verifiedUsers.userId, verifiedUsers.guildId],
+        set: {
+          accessToken:  tokens.access_token,
+          refreshToken: tokens.refresh_token,
+          tokenType:    tokens.token_type,
+          expiresAt:    new Date(Date.now() + tokens.expires_in * 1000),
+          updatedAt:    new Date(),
+        },
+      });
 
-    const guildConfig = await VerificationConfig.findOne({ guildId }).lean();
+    const [guildConfig] = await db
+      .select()
+      .from(verificationConfig)
+      .where(eq(verificationConfig.guildId, guildId))
+      .limit(1);
+
     if (guildConfig?.roleId) {
       await assignRole(guildId, user.id, guildConfig.roleId).catch(() => null);
     }

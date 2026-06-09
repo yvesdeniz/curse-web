@@ -1,23 +1,13 @@
-import mongoose from 'mongoose';
+import { drizzle } from 'drizzle-orm/postgres-js';
+import postgres from 'postgres';
+import * as schema from './schema';
 
 declare global {
   // eslint-disable-next-line no-var
-  var _mongoose: { conn: typeof mongoose | null; promise: Promise<typeof mongoose> | null } | undefined;
+  var _pgClient: ReturnType<typeof postgres> | undefined;
 }
 
-const cache = global._mongoose ?? { conn: null, promise: null };
-global._mongoose = cache;
+const client = global._pgClient ?? postgres(process.env.DATABASE_URL!);
+if (process.env.NODE_ENV !== 'production') global._pgClient = client;
 
-export async function connectDB(): Promise<typeof mongoose> {
-  if (cache.conn) return cache.conn;
-
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error('MONGODB_URI is not set');
-
-  if (!cache.promise) {
-    cache.promise = mongoose.connect(uri, { dbName: 'shd' });
-  }
-
-  cache.conn = await cache.promise;
-  return cache.conn;
-}
+export const db = drizzle(client, { schema });
