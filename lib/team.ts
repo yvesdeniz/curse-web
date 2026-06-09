@@ -16,7 +16,7 @@ export type TeamMember = {
 export const team: TeamMember[] = [
   {
     name: "deniz",
-    role: "Founder & Lead Developer",
+    role: "Lead Developer & Lead Catboy",
     avatar: "https://api.alo.ne/file/i6b1zb",
     socials: {
       discord: "https://discord.com/users/1306505500699000856",
