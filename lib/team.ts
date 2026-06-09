@@ -2,6 +2,8 @@ export type SocialLinks = {
   github?: string;
   discord?: string;
   twitter?: string;
+  instagram?: string;
+  site?: string;
 };
 
 export type TeamMember = {
@@ -19,6 +21,8 @@ export const team: TeamMember[] = [
     socials: {
       discord: "https://discord.com/users/1306505500699000856",
       github: "https://github.com/yvesdeniz",
+      instagram: "https://instagram.com/azerifyneshyt",
+      site: "https://saintdeniz.dev"
     },
   },
   {
@@ -26,7 +30,9 @@ export const team: TeamMember[] = [
     role: "Lead Catgirl & Developer",
     avatar: "https://api.alo.ne/file/dovapq",
     socials: {
-      discord: "https://discord.com/users/852670185088221204"
+      discord: "https://discord.com/users/852670185088221204",
+      site: "https://pinkytooth.lol",
+      github: "https://github.com/lattereal"
     },
   },
   {

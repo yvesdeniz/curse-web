@@ -4,6 +4,8 @@ export type Supporter = {
 };
 
 export const supporters: Supporter[] = [
-  // Add supporters here, e.g.:
-  // { name: "someone", href: "https://github.com/someone" },
+  {
+    name: "oddstan",
+    href: "https://discord.gg/ZMSQcaNyp"
+  }
 ];
