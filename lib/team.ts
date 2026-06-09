@@ -36,4 +36,5 @@ export const team: TeamMember[] = [
     socials: {
       discord: "https://discord.com/users/852670185088221204"
     },
+  }
 ];
