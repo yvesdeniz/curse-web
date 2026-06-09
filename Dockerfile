@@ -41,3 +41,11 @@ USER nextjs
 EXPOSE 3000
 
 CMD ["bun", "server.js"]
+
+# ---- migrator: drizzle-kit push ---------------------------------------------
+FROM oven/bun:1-alpine AS migrator
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY package.json drizzle.config.ts ./
+COPY lib/schema.ts ./lib/schema.ts
+CMD ["bunx", "drizzle-kit", "push"]
