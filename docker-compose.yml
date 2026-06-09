@@ -1,10 +1,9 @@
-version: '3'
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
+      target: runner
       args:
         - NEXT_PUBLIC_INVITE_URL=${NEXT_PUBLIC_INVITE_URL}
     image: curse-web:latest
