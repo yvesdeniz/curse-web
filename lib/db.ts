@@ -7,7 +7,9 @@ declare global {
   var _pgClient: ReturnType<typeof postgres> | undefined;
 }
 
-const client = global._pgClient ?? postgres(process.env.DATABASE_URL!);
+const client = global._pgClient ?? postgres(process.env.DATABASE_URL!, {
+  ssl: { rejectUnauthorized: false },
+});
 if (process.env.NODE_ENV !== 'production') global._pgClient = client;
 
 export const db = drizzle(client, { schema });
