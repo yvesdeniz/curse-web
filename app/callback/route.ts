@@ -134,7 +134,8 @@ export async function GET(request: NextRequest) {
     if (guildConfig?.roleId) {
       await assignRole(guildId, user.id, guildConfig.roleId).catch(() => null);
     }
-  } catch {
+  } catch (e) {
+    console.error('[callback] DB error:', e);
     return to('/verified?error=A+database+error+occurred.');
   }
 
