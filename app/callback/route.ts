@@ -1,4 +1,3 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import { eq } from 'drizzle-orm';
 import { db } from '@/lib/db';
@@ -16,24 +15,6 @@ interface TokenResponse {
 interface DiscordUser {
   id: string;
   username: string;
-}
-
-/**
- * State format: `base64url(guildId).hmac`, signed by the bot with
- * DISCORD_CLIENT_SECRET (see curse/src/lib/oauth.ts). Returns the guild id
- * if the signature is valid, otherwise null.
- */
-function verifyOAuthState(state: string): string | null {
-  const [payload, sig] = state.split('.');
-  if (!payload || !sig) return null;
-
-  const expected = Buffer.from(
-    createHmac('sha256', process.env.DISCORD_CLIENT_SECRET!).update(payload).digest('base64url'),
-  );
-  const given = Buffer.from(sig);
-  if (expected.length !== given.length || !timingSafeEqual(expected, given)) return null;
-
-  return Buffer.from(payload, 'base64url').toString();
 }
 
 async function exchangeCode(code: string): Promise<TokenResponse> {
@@ -61,17 +42,13 @@ async function fetchDiscordUser(accessToken: string): Promise<DiscordUser> {
 }
 
 async function assignRole(guildId: string, userId: string, roleId: string): Promise<void> {
-  const res = await fetch(`${API}/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
+  await fetch(`${API}/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bot ${process.env.DISCORD_BOT_TOKEN}`,
       'X-Audit-Log-Reason': 'curse OAuth verification',
     },
   });
-  if (!res.ok) {
-    const body = await res.text().catch(() => '');
-    console.error(`[callback] Role assign failed (${res.status}) guild=${guildId} user=${userId} role=${roleId}: ${body}`);
-  }
 }
 
 async function sendDM(userId: string): Promise<void> {
@@ -106,8 +83,12 @@ export async function GET(request: NextRequest) {
 
   if (!code || !state) return to('/verified?error=Missing+OAuth+parameters.');
 
-  const guildId = verifyOAuthState(state);
-  if (!guildId) return to('/verified?error=Invalid+state+parameter.');
+  let guildId: string;
+  try {
+    guildId = Buffer.from(state, 'base64url').toString();
+  } catch {
+    return to('/verified?error=Invalid+state+parameter.');
+  }
 
   let tokens: TokenResponse;
   try {
