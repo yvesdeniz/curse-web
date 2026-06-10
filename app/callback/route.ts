@@ -60,7 +60,7 @@ async function fetchDiscordUser(accessToken: string): Promise<DiscordUser> {
   return res.json();
 }
 
-async function assignRole(guildId: string, userId: string, roleId: string): Promise<void> {
+async function assignRole(guildId: string, userId: string, roleId: string): Promise<boolean> {
   const res = await fetch(`${API}/guilds/${guildId}/members/${userId}/roles/${roleId}`, {
     method: 'PUT',
     headers: {
@@ -71,7 +71,9 @@ async function assignRole(guildId: string, userId: string, roleId: string): Prom
   if (!res.ok) {
     const body = await res.text().catch(() => '');
     console.error(`[callback] Role assign failed (${res.status}) guild=${guildId} user=${userId} role=${roleId}: ${body}`);
+    return false;
   }
+  return true;
 }
 
 async function sendDM(userId: string): Promise<void> {
@@ -150,8 +152,26 @@ export async function GET(request: NextRequest) {
       .where(eq(verificationConfig.guildId, guildId))
       .limit(1);
 
-    if (guildConfig?.roleId) {
-      await assignRole(guildId, user.id, guildConfig.roleId).catch(() => null);
+    if (!guildConfig?.roleId) {
+      console.error(
+        `[callback] No verification_config row for guild ${guildId} — ` +
+        'check that the webapp and the bot use the same DATABASE_URL.',
+      );
+      return to(
+        '/verified?error=' +
+        encodeURIComponent('This server has no verification configuration. Ask an admin to re-run the setup command.'),
+      );
+    }
+
+    const roleAssigned = await assignRole(guildId, user.id, guildConfig.roleId).catch(() => false);
+    if (!roleAssigned) {
+      return to(
+        '/verified?error=' +
+        encodeURIComponent(
+          'Your account was verified, but the role could not be assigned. ' +
+          'The bot may be missing the Manage Roles permission, or its highest role may be below the verified role.',
+        ),
+      );
     }
   } catch (e) {
     console.error('[callback] DB error:', e);
